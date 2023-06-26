@@ -11,29 +11,39 @@ form.addEventListener("submit", (e) => {
         alert("Please type your URL!");
     } else {
         let text = input.value;
+        let links=[]
         fetch(`https://api.shrtco.de/v2/shorten?url=${text}`)
             .then(res => res.json())
-            .then(result => displayURLs(result.result["short_link"]))
+            .then(result => {
+                links.push(result.result["full_short_link"])
+                links.push(result.result["short_link"])
+                displayURLs(links)
+            })
         input.value = ""
 
     }
 })
 //map or forEach only works on array
-function displayURLs(shortLink) {
-    container.innerHTML =
+function displayURLs(links) {
+    container.innerHTML = ""; // clear the container before adding new links
+    links.forEach((shortLink, index) => {
+        let linkContainer = document.createElement("div");
+        linkContainer.innerHTML =
         `<div>
             <h4>${shortLink}</h4>
-            <button class="copy-btn">Copy</button>
+            <button id="copy-btn-${index}" class="copy-btn">Copy</button>
         </div>`;
+        container.appendChild(linkContainer);
 
-    const copyButton = document.querySelector('.copy-btn');
+        const copyButton = document.querySelector(`#copy-btn-${index}`);
 
-    copyButton.addEventListener('click', () => {
-        navigator.clipboard.writeText(shortLink).then(() => {
-            alert('Short link copied to clipboard!');
-        }).catch(err => {
-            alert('Something went wrong');
-            console.error('Failed to copy text: ', err);
+        copyButton.addEventListener('click', () => {
+            navigator.clipboard.writeText(shortLink).then(() => {
+                alert('Link copied to clipboard!');
+            }).catch(err => {
+                alert('Something went wrong');
+                console.error('Failed to copy text: ', err);
+            });
         });
     });
 }
