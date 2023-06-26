@@ -13,8 +13,24 @@ form.addEventListener("submit", (e) => {
         let text = input.value;
         fetch(`https://api.shrtco.de/v2/shorten?url=${text}`)
             .then(res => res.json())
-            .then(result => console.log(result.result))
-        input.value=""
+            .then(result => displayURLs(result.result["short_link"]))
+        input.value = ""
 
     }
 })
+//map or forEach only works on array
+function displayURLs(result) {
+    return (
+        container.innerHTML = 
+        `<div>
+            <h4>${result}</h4>
+            <button>Copy</button>
+        </div>`
+    )
+
+
+
+
+
+
+}
