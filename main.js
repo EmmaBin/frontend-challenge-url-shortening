@@ -19,18 +19,21 @@ form.addEventListener("submit", (e) => {
     }
 })
 //map or forEach only works on array
-function displayURLs(result) {
-    return (
-        container.innerHTML = 
+function displayURLs(shortLink) {
+    container.innerHTML =
         `<div>
-            <h4>${result}</h4>
-            <button>Copy</button>
-        </div>`
-    )
+            <h4>${shortLink}</h4>
+            <button class="copy-btn">Copy</button>
+        </div>`;
 
+    const copyButton = document.querySelector('.copy-btn');
 
-
-
-
-
+    copyButton.addEventListener('click', () => {
+        navigator.clipboard.writeText(shortLink).then(() => {
+            alert('Short link copied to clipboard!');
+        }).catch(err => {
+            alert('Something went wrong');
+            console.error('Failed to copy text: ', err);
+        });
+    });
 }
